@@ -7,28 +7,33 @@ const BaseError = require("../errors/base.error");
 
 class AuthService {
   async register(email, password) {
-    const existUser = await userModel.findOne({ email });
+    try {
+      const existUser = await userModel.findOne({ email });
 
-    if (existUser) {
-      throw BaseError.BadRequest(
-        `User with existing email ${email} already registered`
+      if (existUser) {
+        throw BaseError.BadRequest(
+          `User with existing email ${email} already registered`
+        );
+      }
+
+      const hashPassword = await bcrypt.hash(password, 10);
+
+      const user = await userModel.create({ email, password: hashPassword });
+      const userDto = new UserDto(user);
+
+      await mailService.sendActivationMail(
+        email,
+        `${process.env.API_URL}/api/auth/activation/${userDto.id}`
       );
+
+      const tokens = tokenService.generateToken({ ...userDto });
+
+      await tokenService.saveToken(userDto.id, tokens.refreshToken);
+
+      return { user: userDto, ...tokens };
+    } catch (error) {
+      console.log(error);
     }
-
-    const hashPassword = await bcrypt.hash(password, 10);
-    const user = await userModel.create({ email, password: hashPassword });
-    const userDto = new UserDto(user);
-
-    await mailService.sendActivationMail(
-      email,
-      `${process.env.API_URL}/api/auth/activation/${userDto.id}`
-    );
-
-    const tokens = tokenService.generateToken({ ...userDto });
-
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
-    return { user: userDto, ...tokens };
   }
 
   async activation(userId) {
