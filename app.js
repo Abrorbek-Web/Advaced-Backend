@@ -11,8 +11,8 @@ const app = express();
 
 app.use(
   cors({
-    credentials: true,
-    origin: process.env.CLIENT_URL,
+    // credentials: true,
+    // origin: process.env.CLIENT_URL,
     // credentials: true,
     // origin: "*",
   })
@@ -33,12 +33,14 @@ const PORT = process.env.PORT || 8080;
 const bootstrap = async () => {
   try {
     await mongoose
-      .connect(process.env.DB_URL)
+      .connect(
+        "mongodb+srv://info:EBeNQjKK3MXAGYvH@advanced-backend.sx12e.mongodb.net/?retryWrites=true&w=majority&appName=Advanced-Backend"
+      )
       .then(() => console.log("Connected DB"));
 
-    app.listen(PORT, () =>
-      console.log(`Listening on - http://localhost:${PORT}`)
-    );
+    // app.listen(PORT, () =>
+    //   console.log(`Listening on - http://localhost:${PORT}`)
+    // );
   } catch (error) {
     console.log(`Error connecting with DB: ${error}`);
   }

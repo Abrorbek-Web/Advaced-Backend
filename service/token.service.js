@@ -3,10 +3,10 @@ const tokenModel = require("../models/token.model");
 
 class TokenService {
   generateToken(payload) {
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_KEY, {
+    const accessToken = jwt.sign(payload, "backendaccesskey", {
       expiresIn: "15m",
     });
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_KEY, {
+    const refreshToken = jwt.sign(payload, "backendrefreshkey", {
       expiresIn: "30d",
     });
 
@@ -35,7 +35,7 @@ class TokenService {
 
   validateRefreshToken(token) {
     try {
-      return jwt.verify(token, process.env.JWT_REFRESH_KEY);
+      return jwt.verify(token, "backendrefreshkey");
     } catch (error) {
       return null;
     }
@@ -43,7 +43,7 @@ class TokenService {
 
   validateAccessToken(token) {
     try {
-      return jwt.verify(token, process.env.JWT_ACCESS_KEY);
+      return jwt.verify(token, "backendaccesskey");
     } catch (error) {
       return null;
     }
