@@ -9,41 +9,36 @@ const cors = require("cors");
 
 const app = express();
 
+// CORS sozlamalari
 app.use(
   cors({
-    // credentials: true,
-    // origin: process.env.CLIENT_URL,
-    // credentials: true,
-    // origin: "*",
+    credentials: true,
+    origin: process.env.CLIENT_URL, // Vercel yoki lokal frontend URL
   })
 );
+
 app.use(express.json());
-app.use(cookieParser({}));
+app.use(cookieParser());
 app.use(express.static("static"));
-app.use(fileUpload({}));
+app.use(fileUpload());
 
 // Routes
 app.use("/api/post", require("./routes/post.route"));
 app.use("/api/auth", require("./routes/auth.route"));
 
+// Error Middleware
 app.use(errorMiddleware);
-
-const PORT = process.env.PORT || 8080;
 
 const bootstrap = async () => {
   try {
     await mongoose
-      .connect(
-        "mongodb+srv://info:EBeNQjKK3MXAGYvH@advanced-backend.sx12e.mongodb.net/?retryWrites=true&w=majority&appName=Advanced-Backend"
-      )
-      .then(() => console.log("Connected DB"));
-
-    // app.listen(PORT, () =>
-    //   console.log(`Listening on - http://localhost:${PORT}`)
-    // );
+      .connect(process.env.MONGO_URI) // .env dan o‘qiydi
+      .then(() => console.log("Connected to DB"));
   } catch (error) {
     console.log(`Error connecting with DB: ${error}`);
   }
 };
 
 bootstrap();
+
+module.exports = app; // Vercel uchun export qilish
