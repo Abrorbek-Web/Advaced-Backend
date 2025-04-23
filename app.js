@@ -12,8 +12,8 @@ const app = express();
 // CORS sozlamalari
 app.use(
   cors({
-    credentials: true,
-    origin: process.env.CLIENT_URL, // Vercel yoki lokal frontend URL
+    origin: process.env.CLIENT_URL || "http://localhost:5173", // Frontend URL
+    credentials: true, // Cookie va auth headerlarni ishlatish uchun
   })
 );
 

@@ -3,19 +3,19 @@ const nodemailer = require("nodemailer");
 class MailService {
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       secure: false,
       auth: {
-        user: "abrorbekweb@gmail.com",
-        pass: "gatn jtzz oqhd dtyo",
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
       },
     });
   }
 
   async sendActivationMail(email, activationLink) {
     await this.transporter.sendMail({
-      from: "abrorbekweb@gmail.com",
+      from: process.env.SMTP_USER,
       to: email,
       subject: `Activation account link ${activationLink}`,
       html: `  
@@ -28,7 +28,7 @@ class MailService {
 
   async sendForgotPasswordMail(email, activationLink) {
     await this.transporter.sendMail({
-      from: "abrorbekweb@gmail.com",
+      from: process.env.SMTP_USER,
       to: email,
       subject: `Forgot password.`,
       html: `

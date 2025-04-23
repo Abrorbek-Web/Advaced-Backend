@@ -11,7 +11,7 @@
     "NodeJS",
     "ExpressJS"
   ],
-  "author": "Samar Badriddinov",
+  "author": "Abrorbek",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
